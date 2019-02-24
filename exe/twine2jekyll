@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+
+require 'twine2jekyll'
+require 'nokogiri'
+require 'jekyll'
+
+if ARGV.length != 2
+  puts "Usage: twine2jekyll <source.html> <output directory>"
+  exit 1
+end
+
+TWINE_FILE = ARGV[0]
+OUTPUT_DIR = ARGV[1]
+
+unless File.readable?(TWINE_FILE)
+  puts "#{TWINE_FILE} could not be read"
+  exit 1
+end
+
+if Dir.exist?(OUTPUT_DIR) && !Dir.empty?(OUTPUT_DIR)
+  puts "#{OUTPUT_DIR} exists and isn't empty, this would break things"
+  exit 1
+end
+
+TWINE_SOURCE = Nokogiri::HTML(open(TWINE_FILE))
+FileUtils.mkdir_p(OUTPUT_DIR)
+Jekyll::Commands::New.create_blank_site(OUTPUT_DIR)
+
+Twine2jekyll.generate_layout(File.join(OUTPUT_DIR, '_layouts', 'page.html'))
+
+TWINE_SOURCE.css('tw-passagedata').each do |page|
+  page_content = Twine2jekyll.markdownify(page.content)
+  File.write(File.join(OUTPUT_DIR, page['name']+'.md'), page_content)
+end
+
+File.unlink(File.join(OUTPUT_DIR, 'index.html'))
+FileUtils.symlink(File.join(OUTPUT_DIR, TWINE_SOURCE.css('tw-passagedata')[0]['name']+'.md'), File.join(OUTPUT_DIR, 'index.md'))
+
+puts "Generated a Jekyll site in #{OUTPUT_DIR}, cd to that directory and then run 'jekyll s'"
