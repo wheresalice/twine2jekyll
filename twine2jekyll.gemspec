@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Convert a Twine story into a Jekyll site.}
   spec.description   = %q{Convert a Twine story into multiple Markdown pages for a Jekyll site.}
-  spec.homepage      = "https://wheresalice.info"
+  spec.homepage      = "https://github.com/wheresalice/twine2jekyll"
   spec.license       = "MIT"
 
   # Specify which files should be added to the gem when it is released.
