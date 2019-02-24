@@ -34,6 +34,6 @@ TWINE_SOURCE.css('tw-passagedata').each do |page|
 end
 
 File.unlink(File.join(OUTPUT_DIR, 'index.html'))
-FileUtils.symlink(File.join(OUTPUT_DIR, TWINE_SOURCE.css('tw-passagedata')[0]['name']+'.md'), File.join(OUTPUT_DIR, 'index.md'))
+FileUtils.symlink(TWINE_SOURCE.css('tw-passagedata')[0]['name']+'.md', File.join(OUTPUT_DIR, 'index.md'))
 
 puts "Generated a Jekyll site in #{OUTPUT_DIR}, cd to that directory and then run 'jekyll s'"
